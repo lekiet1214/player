@@ -2,8 +2,8 @@ name: Build and Release Flutter Android App
 
 on:
   push:
-    tags:
-      - 'v*'  # This triggers the workflow for tags starting with 'v'
+    branches:
+      - '**'  # Triggers the workflow on every push to any branch
 
 jobs:
   build:
@@ -30,15 +30,15 @@ jobs:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
 
-      - name: Create GitHub Release
+      - name: Create Draft GitHub Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
+          tag_name: ${{ github.sha }}
+          release_name: Draft release for ${{ github.sha }}
+          draft: true
           prerelease: false
 
       - name: Upload Release Asset
